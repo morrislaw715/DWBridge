@@ -1,0 +1,9 @@
+# Sample local Gradle properties to point to a Java 21 JDK
+# Copy this file to `gradle.properties.local` (or add the line to your existing gradle.properties)
+# and replace /path/to/java21 with the actual path on your machine.
+# Example macOS Temurin 21 path:
+# /Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
+
+# Uncomment and set to your Java 21 JDK
+# org.gradle.java.home=/path/to/java21/jdk
+

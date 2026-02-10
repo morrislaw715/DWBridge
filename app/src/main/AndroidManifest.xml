@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Required permissions for WebSocket server and foreground service -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.DWBridge"
+        tools:targetApi="31">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.DWBridge.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Foreground service that hosts the WebSocket server -->
+        <service
+            android:name="com.nx.dwbridge.ws.WebSocketService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+        <!-- BroadcastReceiver to receive DataWedge scan intents; DataWedge should be configured to send broadcasts with this action -->
+        <receiver android:name="com.nx.dwbridge.dw.DataWedgeReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="com.nx.dwbridge.DATAWEDGE" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>
