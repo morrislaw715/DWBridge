@@ -21,7 +21,7 @@ class WebSocketService : Service() {
         private const val TAG = "DWBridge"
         private const val CHANNEL_ID = "dwbridge.ws.channel"
         const val EXTRA_PORT = "extra_port"
-        const val DEFAULT_PORT = 8080
+        const val DEFAULT_PORT = 12345
         const val EXTRA_WS_JSON = "extra_ws_json"
     }
 
@@ -45,6 +45,9 @@ class WebSocketService : Service() {
             Log.e(TAG, "SecurityException while starting foreground service", se)
             stopSelf()
             return START_NOT_STICKY
+        } catch (t: Throwable) {
+            Log.e(TAG, "Error while starting foreground service", t)
+            // Don't crash the app, continue to start the server
         }
         startServer(port)
 

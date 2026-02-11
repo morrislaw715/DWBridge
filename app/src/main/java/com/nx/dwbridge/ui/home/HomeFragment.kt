@@ -1,6 +1,10 @@
 package com.nx.dwbridge.ui.home
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +16,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.nx.dwbridge.databinding.FragmentHomeBinding
 import com.nx.dwbridge.ui.ServerViewModel
 import com.nx.dwbridge.ws.WebSocketService
+import com.nx.dwbridge.ws.WsMessage
+import com.nx.dwbridge.scan.ScanBus
 
 class HomeFragment : Fragment() {
 
@@ -21,6 +27,7 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
     private lateinit var serverViewModel: ServerViewModel
+    private var scanReceiver: BroadcastReceiver? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,10 +50,29 @@ class HomeFragment : Fragment() {
         serverViewModel.isRunning.observe(viewLifecycleOwner) { running ->
             binding.btnToggle.text = if (running) "Stop" else "Start"
             binding.tvStatus.text = "Status: " + if (running) "running" else "stopped"
+            // Disable port input while running
+            binding.etPort.isEnabled = !running
+            binding.etPort.isFocusable = !running
+            binding.etPort.isFocusableInTouchMode = !running
+            if (running) {
+                // hide keyboard and clear focus when starting
+                binding.etPort.clearFocus()
+                val imm = requireContext().getSystemService(android.content.Context.INPUT_METHOD_SERVICE) as android.view.inputmethod.InputMethodManager
+                imm.hideSoftInputFromWindow(binding.etPort.windowToken, 0)
+            }
         }
 
         serverViewModel.messages.observe(viewLifecycleOwner) { list ->
             (binding.rvMessages.adapter as? MessagesAdapter)?.submitList(list)
+            // auto-scroll to top for newest message
+            binding.rvMessages.post {
+                if ((binding.rvMessages.adapter?.itemCount ?: 0) > 0) binding.rvMessages.scrollToPosition(0)
+            }
+        }
+
+        // Observe ScanBus for incoming scans posted by DataWedgeReceiver
+        ScanBus.scan.observe(viewLifecycleOwner) { msg ->
+            msg?.let { serverViewModel.addMessage(it) }
         }
 
         return root
@@ -70,6 +96,7 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // No dynamic receiver to unregister; ScanBus uses LiveData
         _binding = null
     }
 }

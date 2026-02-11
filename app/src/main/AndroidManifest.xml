@@ -5,6 +5,7 @@
     <!-- Required permissions for WebSocket server and foreground service -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
     <application
         android:allowBackup="true"
@@ -37,7 +38,8 @@
         <!-- BroadcastReceiver to receive DataWedge scan intents; DataWedge should be configured to send broadcasts with this action -->
         <receiver android:name="com.nx.dwbridge.dw.DataWedgeReceiver" android:exported="true">
             <intent-filter>
-                <action android:name="com.nx.dwbridge.DATAWEDGE" />
+                <action android:name="com.nx.dw.ACTION" />
+                <category android:name="com.nx.dw.category.DEFAULT" />
             </intent-filter>
         </receiver>
     </application>
