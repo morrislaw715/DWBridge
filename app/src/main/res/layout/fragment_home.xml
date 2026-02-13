@@ -13,18 +13,21 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:hint="Port (default 127.0.0.1:12345)"
         android:inputType="number"
-        android:hint="Port (default 8080)"
-        app:layout_constraintEnd_toStartOf="@+id/btn_toggle"
+        app:layout_constraintEnd_toStartOf="@+id/switch_toggle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_toggle"
+    <!-- Replace Button with a Switch to act as an On/Off toggle -->
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switch_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Start"
+        android:textOff="Off"
+        android:textOn="On"
+        android:checked="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
